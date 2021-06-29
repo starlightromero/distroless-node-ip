@@ -1,0 +1,24 @@
+FROM node:14.17-alpine as build
+
+WORKDIR /usr/src/app
+
+RUN apk update && apk add curl && curl -sf https://gobinaries.com/tj/node-prune | sh
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+RUN npm run build && npm prune --production && node-prune
+
+FROM gcr.io/distroless/nodejs:14
+
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/build ./build
+
+EXPOSE 8080
+
+CMD ["build/app.js"]
