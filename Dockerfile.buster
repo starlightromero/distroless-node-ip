@@ -1,0 +1,19 @@
+FROM node:14.17-buster as build
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+
+RUN npm ci --production
+
+COPY . .
+
+FROM node:14.17-buster
+
+WORKDIR /usr/src/app
+
+COPY --from=build /usr/src/app .
+
+EXPOSE 8080
+
+CMD ["npm", "start"]
