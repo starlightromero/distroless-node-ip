@@ -1,18 +1,18 @@
 const express = require('express');
 const axios = require('axios');
 
-const server = express();
+const app = express();
 
-server.use(express.json());
+app.use(express.json());
 
-server.use((req, res, next) => {
+app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
 
-server.get('/', async (req, res) => {
+app.get('/', async (req, res) => {
   const apiKey = process.env.API_KEY;
 
   try {
@@ -23,6 +23,6 @@ server.get('/', async (req, res) => {
   }
 });
 
-server.listen(8080);
+app.listen(8080);
 
-module.exports = server;
+module.exports = app;
